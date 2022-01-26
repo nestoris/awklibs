@@ -1,5 +1,11 @@
 # My awklibs
-A small collection of my achievements for awk scripting and programming. Install them to a `/usr/share/awk/` directory and use them in your scripts with command (for example) `@include "arraytree"` (w/o extension) or when running from cmdline: `awk -i arraytree '{......}'`
+A small collection of my achievements for awk scripting and programming. Install them to a `/usr/share/awk/` directory and use them in your scripts with command (for example) `@include "arraytree"` (w/o extension) or when running from cmdline: `gawk -i arraytree '{......}'`
+
+The installation command is:
+```
+sudo cp "library.awk" "$(gawk 'BEGIN{x=ENVIRON["AWKPATH"];gsub(/(\.:|:.*$)/,"",x);print x}')"
+```
+
 
 ## [Array Tree](arraytree.awk)
 **[ru] Массив AWK в виде дерева.**<br>
