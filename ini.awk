@@ -54,13 +54,13 @@ function streamini(_r,arr){ # read ini from stdin/stdout and transform it to sec
 	}
 }
 
-function readinif(file,arr,	rs){	#read ini file
+function readinif(file,arr,	rs){	#read ini file and convert it to a 2D gawk array.
 	rs=RS
 	RS="\n|\r"
 	while((getline<file)>0){
 		if($0!~"^#|^;|^$"){
 			gsub(" *[;#].*$","")
-			if($0~/^\[.*\]$/){sect=$0;gsub(/^\[|\].*$/,"",sect)}else{split($0,va,"=");arr[sect][va[1]]=va[2]}
+			if($0~/^\[.*\]$/){sect=$0;gsub(/^\[|\].*$/,"",sect);arr[sect]["#"];delete arr[sect]["#"]}else{split($0,va,"=");arr[sect][va[1]]=va[2]}
 		}
 	}
 	RS=rs
