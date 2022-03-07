@@ -7,6 +7,34 @@ sudo cp "library.awk" "$(gawk 'BEGIN{x=ENVIRON["AWKPATH"];gsub(/(\.:|:.*$)/,"",x
 ```
 
 
+# [GIO Functions](gio.awk)
+GAWK Library for adding functions of converting some various GIO-info about files/locations such as **smb://192.168.8.1/share/photo.jpg** or **computer:///TOSHIBA HDWL120.drive**<br>
+installation:<br>
+1) Get awk @include library (AWKPATH built-in variable) by running:
+```
+gawk 'BEGIN{x=ENVIRON["AWKPATH"];gsub(":","\n",x);print x}'
+```
+2) Choose preferred path from list and create symlink:
+```
+ln -s gio.awk </chosen/path>
+```
+or:
+```
+cp gio.awk </chosen/path>
+```
+3) Usage:
+```
+#!/usr/bin/gawk -f
+@include "gio.awk"
+BEGIN{
+gio_dir("computer:///",comp_list_array_all_attributes,"*")
+gio_info("computer:///root.link",rootFS_icon_info)
+}
+```
+*Screenshots:*<br>
+![](gio_info.png)<br>
+![](gio_dir.png)
+
 ## [Array Tree](arraytree.awk)
 **[ru] Массив AWK в виде дерева.**<br>
 GNU AWK script for exploring contents of a multi-dimensional associative array.<br> Example:
