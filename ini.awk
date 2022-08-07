@@ -14,7 +14,7 @@
 ## Reading Windows 3.11 ini file without aany gawk C plugins (more safe!)
 # gawk -i ini -i arraytree 'BEGIN{readinif("/mnt/dos/windows/win.ini",arr);arraytree(arr,"arr")}'
 
-### Comments and commented strings are ignored!
+### Comments and commented strings are ignored and removed!
 
 ## Write array to ini file (only 2-dimensional arrays!)
 # #!/usr/bin/gawk
@@ -35,14 +35,23 @@
 # BEGIN{inidata=doini(arr,"m");print inidata > "/mnt/mac_os_9/apple.ini"}
 
 
-### TODO! Currently not supported ini data with spaces arround "=" symbol and values containing "=" symbol!!!
+### TODO! Currently not supported ini data with spaces arround "=" symbol and values containing "=" symbol!!! Or supported? Let's test!
 
-function readini(data,arr,	da,	i){	#read ini data as variable
+function readini(data,arr,	da,	i,	vall,	varr){	#read ini data as variable
 	split(data,da,"\n")
 	for(i in da){
 		if(da[i]!~"^#|^;|^$"){
 			gsub(" *[;#].*$","",da[i])
-			if(da[i]~/^\[.*\]$/){sect=da[i];gsub(/^\[|\].*$/,"",sect)}else{split(da[i],va,"=");arr[sect][va[1]]=va[2]}
+			gsub(/ *$/,"",da[i])
+			if(da[i]~/^\[.*\]$/){
+				sect=da[i];gsub(/^\[|\].*$/,"",sect)
+			}else{
+				varr=vall=da[i]
+				gsub(/ *=.*$/,"",varr)
+				gsub(/^[^=]*= */,"",vall)
+				arr[sect][varr]=vall
+				#split(da[i],va,"=");arr[sect][va[1]]=va[2]
+			}
 		}
 	}
 }
@@ -50,7 +59,15 @@ function readini(data,arr,	da,	i){	#read ini data as variable
 function streamini(_r,arr){ # read ini from stdin/stdout and transform it to second argument array
 	if(_r!~"^#|^;|^$"){
 		gsub(" *[;#].*$","",_r)
-		if(_r~/^\[.*\]$/){sect=_r;gsub(/^\[|\].*$/,"",sect)}else{split(_r,va,"=");arr[sect][va[1]]=va[2]}
+		if(_r~/^\[.*\]$/){
+			sect=_r;gsub(/^\[|\].*$/,"",sect)
+		}else{
+			varr=vall=_r
+			gsub(/ *=.*$/,"",varr)
+			gsub(/^[^=]*= */,"",vall)
+			arr[sect][varr]=vall
+#			split(_r,va,"=");arr[sect][va[1]]=va[2]
+		}
 	}
 }
 
@@ -60,7 +77,16 @@ function readinif(file,arr,	rs){	#read ini file and convert it to a 2D gawk arra
 	while((getline<file)>0){
 		if($0!~"^#|^;|^$"){
 			gsub(" *[;#].*$","")
-			if($0~/^\[.*\]$/){sect=$0;gsub(/^\[|\].*$/,"",sect);arr[sect]["#"];delete arr[sect]["#"]}else{split($0,va,"=");arr[sect][va[1]]=va[2]}
+			if($0~/^\[.*\]$/){
+				sect=$0;gsub(/^\[|\].*$/,"",sect);arr[sect]["#"]
+				delete arr[sect]["#"]
+			}else{
+				varr=vall=$0
+				gsub(/ *=.*$/,"",varr)
+				gsub(/^[^=]*= */,"",vall)
+				arr[sect][varr]=vall
+#				split($0,va,"=");arr[sect][va[1]]=va[2]
+			}
 		}
 	}
 	RS=rs
@@ -69,16 +95,26 @@ function readinif(file,arr,	rs){	#read ini file and convert it to a 2D gawk arra
 function printini(arr,	i,	j){
 	if(isarray(arr)){
 		for(i in arr){
-			if(isarray(arr[i])){print "["i"]";for(j in arr[i]){print j"="arr[i][j]}}
+			if(isarray(arr[i])){
+				print "["i"]"
+				for(j in arr[i]){
+					print j"="arr[i][j]
+				}
+			}
 		}
 	}
 }
 
-function doini(arr,sys,	i,	j,	out){
+function doini(arr,sys,	i,	j,	out,	rs){ # Create ini file: arr -- input array, sys -- newline symbol for system (w -- Windows, m -- Mac, any other -- Unix/Linux)
 rs=(sys=="w"?"\r\n":sys=="m"?"\r":"\n")
 	if(isarray(arr)){
 		for(i in arr){
-			if(isarray(arr[i])){out="["i"]";for(j in arr[i]){out="\n"j"="arr[i][j]}}
+			if(isarray(arr[i])){
+				out="["i"]"
+				for(j in arr[i]){
+					out="\n"j"="arr[i][j]
+				}
+			}
 		}
 	}
 return out

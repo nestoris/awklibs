@@ -31,6 +31,7 @@ gio_dir("computer:///",comp_list_array_all_attributes,"*")
 gio_info("computer:///root.link",rootFS_icon_info)
 }
 ```
+
 *Screenshots:*<br>
 ![](gio_info.png)<br>
 ![](gio_dir.png)
@@ -46,8 +47,10 @@ BEGIN{
  arraytree(ENVIRON,"ENVIRON")
 }
 ```
+
 *Screenshot:*<br>
 ![arraytree](arraytree.png)
 
 ## [INI from/to AWK array](ini.awk)
-The full readme for this lib is in the head of `ini.awk` file. This lib reads ini files, ini stdout, and ini multistring variable and convert it to 2D associative awk array.
+The powerfull library to manipulate ini files and/or ini data.<br>
+The full readme for this lib is in the head of `ini.awk` file. This lib reads ini files, ini stream, ini multistring variable and converts it into a 2D associative awk array.
