@@ -11,7 +11,7 @@
 ## Reading Windows 3.11 ini file (loading C library for reading files)
 # gawk -l readfile -i ini -i arraytree 'BEGIN{winini=readfile("/mnt/dos/windows/win.ini");readini(winini,arr);arraytree(arr,"arr")}'
 
-## Reading Windows 3.11 ini file without aany gawk C plugins (more safe!)
+## Reading Windows 3.11 ini file without any gawk C plugins (more safe!)
 # gawk -i ini -i arraytree 'BEGIN{readinif("/mnt/dos/windows/win.ini",arr);arraytree(arr,"arr")}'
 
 ### Comments and commented strings are ignored and removed!
@@ -92,11 +92,12 @@ function readinif(file,arr,	rs){	#read ini file and convert it to a 2D gawk arra
 	RS=rs
 }
 
-function printini(arr,	i,	j){
+function printini(arr,	i,	j,	k){
 	if(isarray(arr)){
 		for(i in arr){
+			k++
 			if(isarray(arr[i])){
-				print "["i"]"
+				print (k>1?"\n":"") "["i"]"
 				for(j in arr[i]){
 					print j"="arr[i][j]
 				}
@@ -110,9 +111,9 @@ rs=(sys=="w"?"\r\n":sys=="m"?"\r":"\n")
 	if(isarray(arr)){
 		for(i in arr){
 			if(isarray(arr[i])){
-				out="["i"]"
+				out=out (out?"\n\n":"") "["i"]"
 				for(j in arr[i]){
-					out="\n"j"="arr[i][j]
+					out=out "\n"j"="arr[i][j]
 				}
 			}
 		}
