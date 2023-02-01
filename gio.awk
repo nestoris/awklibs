@@ -71,3 +71,13 @@ function gio_dir(	file,arr,	attr,	i){
  }
  FS=_fs
 }
+
+function gio_localpath(infile){ # Returns local path to a file (also returns localized path from URI such as "file:///home/user/%D0%92%D0%B8%D0%B4%D0%B5%D0%BE/")
+	cmd="LC_MESSAGES=C gio info --attributes=\"\" '" infile "'"
+	while((cmd|getline)>0){
+		if(tolower($0)~/local path:/){
+			gsub(/^[^/]*/,"")
+			return $0
+		}
+	}
+}
