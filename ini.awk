@@ -37,7 +37,7 @@
 
 ### TODO! Currently not supported ini data with spaces arround "=" symbol and values containing "=" symbol!!! Or supported? Let's test!
 
-function readini(data,arr,	da,	i,	vall,	varr){	#read ini data as variable
+function readini(data,arr,	da,	i,	vall,	varr,sect){	#read ini data as variable
 	split(data,da,"\n")
 	for(i in da){
 		if(da[i]!~"^#|^;|^$"){
@@ -56,7 +56,7 @@ function readini(data,arr,	da,	i,	vall,	varr){	#read ini data as variable
 	}
 }
 
-function streamini(_r,arr){ # read ini from stdin/stdout and transform it to second argument array
+function streamini(_r,arr,	var,val,sect){ # read ini from stdin/stdout and transform it to second argument array
 	if(_r!~"^#|^;|^$"){
 		gsub(" *[;#].*$","",_r)
 		if(_r~/^\[.*\]$/){
@@ -71,7 +71,7 @@ function streamini(_r,arr){ # read ini from stdin/stdout and transform it to sec
 	}
 }
 
-function readinif(file,arr,	rs){	#read ini file and convert it to a 2D gawk array.
+function readinif(file,arr,	rs,var,val,sect){	#read ini file and convert it to a 2D gawk array.
 	rs=RS
 	RS="\n|\r"
 	while((getline<file)>0){
