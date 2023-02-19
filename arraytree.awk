@@ -1,5 +1,5 @@
 #!/usr/bin/gawk -f
-function arraytree(	inputarray,	arrname,	_i,	member,	arrnum){
+function arraytree(inputarray,arrname,	_i,member,arrnum){
  if(!isarray(inputarray)){
   print indent arrname member "[\033[1;31m\"" _i "\"\033[0m]=\"\033[1;32m" inputarray"\033[0m\""
  }else{
