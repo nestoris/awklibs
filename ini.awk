@@ -71,7 +71,7 @@ function streamini(_r,arr,	var,val,sect){ # read ini from stdin/stdout and trans
 	}
 }
 
-function readinif(file,arr,	rs,var,val,sect){	#read ini file and convert it to a 2D gawk array.
+function readinif(file,arr,	rs,var,val,sect,varr,vall){	#read ini file and convert it to a 2D gawk array.
 	rs=RS
 	RS="\n|\r"
 	while((getline<file)>0){
