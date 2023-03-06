@@ -92,6 +92,46 @@ function readinif(file,arr,	rs,var,val,sect,varr,vall){	#read ini file and conve
 	RS=rs
 }
 
+function readinif_flat(file,arr,delimiter,	rs,sect,a){	# read ini file and convert it to a 1D associative array.
+	delimiter?"":delimiter=":" # default delimiter is ":"
+	rs=RS
+	RS="\n|\r"
+	while((getline<file)>0){
+		if($0!~"^#|^;|^$"){
+			gsub(" *[;#].*$","")
+			if(match($0,/^\[(.*)\]/,a)){
+				sect=a[1]
+			}else{
+				gsub(/ *$/,"") # delete spaces at end
+				match($0,/ *([^ $]*) *= *(.*)$/,a) # get (parameter) and (value)
+				arr[sect delimiter a[1]]=a[2]
+			}
+		}
+	}
+	RS=rs
+}
+
+function doini_flat(arr,delimiter,sys,	i,j,k,out,rs,aini,a){ # make ini from flat array array[section:parameter]="data"
+	delimiter?"":delimiter=":" # default delimiter is ":"
+	for(i in arr){
+		#print i
+		if(match(i,"([^"delimiter"]*)"delimiter"(.*)",a))
+		#print a[1], a[2], arr[i]
+		aini[a[1]][a[2]]=arr[i]
+	}
+	rs=(sys=="w"?"\r\n":sys=="m"?"\r":"\n")
+	for(i in aini){
+		k++
+		if(isarray(aini[i])){
+			out=out (k>1?rs rs:"") "["i"]"
+			for(j in aini[i]){
+				out=out rs j"="aini[i][j]
+			}
+		}
+	}
+	return out
+}
+
 function printini(arr,	i,	j,	k){
 	if(isarray(arr)){
 		for(i in arr){
@@ -111,9 +151,9 @@ rs=(sys=="w"?"\r\n":sys=="m"?"\r":"\n")
 	if(isarray(arr)){
 		for(i in arr){
 			if(isarray(arr[i])){
-				out=out (out?"\n\n":"") "["i"]"
+				out=out (out?rs rs:"") "["i"]"
 				for(j in arr[i]){
-					out=out "\n"j"="arr[i][j]
+					out=out rs j"="arr[i][j]
 				}
 			}
 		}
