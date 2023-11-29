@@ -52,6 +52,26 @@ function gio_info(file,arr,	pre1,	pre2){
  FS=_fs
 }
 
+function gio_parsed_info(file,arr,	pre1,	pre2,	_fs,	aa){
+	delete arr
+	if(!file){print "no input file!"; exit -1}
+	cmd="LC_MESSAGES=C gio info \""file"\""
+	while((cmd|getline)>0){
+		if(match($0,/^([^ :]*): +(.*)$/,aa)){ # строка со свойствами
+			#print aa[1] " + " aa[2]
+			arr[aa[1]] = aa[2]
+		}else if(match($0,/^([^ :]*):/,aa)){ # строка с именем подмассива атрибутов
+			subarray=aa[1]
+			#print
+			#arraytree(aa,"aa")
+		}else if(match($0,/^ *(.*)::([^:]*): (.*)$/,aa)){
+			#print
+			#print aa[1] " + " aa[2] " + " aa[3]
+			if(subarray){arr[subarray][aa[1]][aa[2]]=aa[3]}
+		}
+ }
+}
+
 function gio_dir(	file,arr,	attr,	i){
  delete arr
  _fs=FS
