@@ -27,7 +27,7 @@ function gio_info(file,arr,	pre1,	pre2){
  if(!file){exit -1}
  _fs=FS
  FS=": "
- cmd="LC_MESSAGES=C gio info \""file"\""
+ cmd="LC_MESSAGES=C gio info '"file"'"
  while((cmd|getline)>0){
   if(pre1){
    if($1~/^ /&&pre1!~/^ /){
@@ -52,10 +52,10 @@ function gio_info(file,arr,	pre1,	pre2){
  FS=_fs
 }
 
-function gio_parsed_info(file,arr,	pre1,	pre2,	_fs,	aa){
+function gio_sorted_info(file,arr,	pre1,	pre2,	_fs,	aa){
 	delete arr
 	if(!file){print "no input file!"; exit -1}
-	cmd="LC_MESSAGES=C gio info \""file"\""
+	cmd="LC_MESSAGES=C gio info '"file"'"
 	while((cmd|getline)>0){
 		if(match($0,/^([^ :]*): +(.*)$/,aa)){ # строка со свойствами
 			#print aa[1] " + " aa[2]
@@ -76,7 +76,7 @@ function gio_dir(	file,arr,	attr,	i){
  delete arr
  _fs=FS
  FS="\t"
- while(("gio list -l \"" file"\"" (attr?" -a \"" attr "\"":"") |getline)>0){
+ while(("gio list -l '" file"'" (attr?" -a \"" attr "\"":"") |getline)>0){
  gsub(/[()]/,"",$3)
  arr[$1]["size"]=$2
  arr[$1]["type"]=$3
